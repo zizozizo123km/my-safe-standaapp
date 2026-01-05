@@ -1,0 +1,305 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# build output
+/dist
+/build
+.vite/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS and temporary files
+.DS_Store
+Thumbs.db
+
+# TypeScript cache
+*.tsbuildinfo
+
+# IDE specific files (VSCode)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+### index.html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook Clone | React + Vite</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+### package.json
+{
+  "name": "facebook-clone",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  }
+}
+### postcss.config.js
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+### tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        'fb-blue': '#1877f2',
+        'fb-gray-light': '#f0f2f5',
+        'fb-gray-dark': '#65676b',
+        'fb-green': '#36a420',
+      },
+    },
+  },
+  plugins: [],
+}
+### tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOMIterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Path Aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
+### tsconfig.node.json
+{
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tsbuildinfo",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"]
+  },
+  "include": ["vite.config.ts"]
+}
+### vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+})
+### src/App.tsx
+import Header from '@/components/Header';
+
+function App() {
+  return (
+    <div className="min-h-screen bg-fb-gray-light">
+      <Header />
+      <main className="pt-14 flex justify-center">
+        <div className="container max-w-6xl flex">
+          {/* Left Sidebar (Navigation/Shortcuts) */}
+          <aside className="hidden lg:block w-[360px] xl:w-[25%] pt-4">
+            <div className="fixed w-[200px]">
+              <h2 className="text-xl font-bold p-2">Shortcuts</h2>
+              {/* Navigation items go here */}
+            </div>
+          </aside>
+
+          {/* Center Feed */}
+          <section className="w-full lg:w-[60%] xl:w-[50%] p-4">
+            <div className="bg-white p-4 rounded-lg shadow-md mb-4 border border-gray-200">
+                <p className="text-lg text-gray-500">What's on your mind?</p>
+            </div>
+            
+            {/* Example Post */}
+            <div className="bg-white p-4 rounded-lg shadow-md mb-4">
+                <div className="flex items-center mb-3">
+                    <div className="w-10 h-10 bg-blue-300 rounded-full mr-3"></div>
+                    <div>
+                        <p className="font-semibold text-gray-900">Facebook User</p>
+                        <p className="text-xs text-fb-gray-dark">3 hours ago · <span className="text-xs">🌎</span></p>
+                    </div>
+                </div>
+                <p className="mb-4">Simulating a standard feed item structure.</p>
+                <div className="flex justify-around border-t pt-2 text-fb-gray-dark">
+                    <button className="flex items-center p-2 rounded-lg hover:bg-fb-gray-light"><span className="mr-1">👍</span> Like</button>
+                    <button className="flex items-center p-2 rounded-lg hover:bg-fb-gray-light"><span className="mr-1">💬</span> Comment</button>
+                    <button className="flex items-center p-2 rounded-lg hover:bg-fb-gray-light"><span className="mr-1">↪️</span> Share</button>
+                </div>
+            </div>
+
+          </section>
+
+          {/* Right Sidebar (Contacts/Ads) */}
+          <aside className="hidden lg:block w-[360px] xl:w-[25%] pt-4">
+            <div className="fixed w-[280px]">
+                <h2 className="text-xl font-bold text-fb-gray-dark p-2">Contacts</h2>
+                {/* Contact list goes here */}
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  )
+}
+
+export default App
+### src/index.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom basic styling adjustments */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+### src/main.tsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+### src/components/Header.tsx
+import React from 'react';
+
+// Simplified icon components based on the FB aesthetic
+const SearchIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 text-fb-gray-dark">
+        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.197 5.197a7.5 7.5 0 1 0 10.607 10.607Z" />
+    </svg>
+);
+const HomeIcon = ({ isActive = false }: { isActive?: boolean }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill={isActive ? '#1877f2' : 'none'} viewBox="0 0 24 24" strokeWidth={isActive ? 0 : 1.5} stroke={isActive ? 'none' : '#65676b'} className={`w-7 h-7 ${isActive ? 'text-fb-blue' : 'text-fb-gray-dark'}`}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125h9.75a1.125 1.125 0 0 0 1.125-1.125V9.75M8.25 21h8.25" />
+    </svg>
+);
+
+
+const Header: React.FC = () => {
+  return (
+    <header className="fixed top-0 left-0 right-0 h-14 bg-white shadow-md z-50 flex items-center justify-between px-4">
+      {/* Left Section: Logo & Search */}
+      <div className="flex items-center space-x-2">
+        {/* Facebook Logo Placeholder */}
+        <div className="text-3xl font-bold text-fb-blue mr-1">f</div>
+        <div className="hidden lg:flex bg-fb-gray-light p-2 rounded-full items-center space-x-2 w-64">
+          <SearchIcon />
+          <input 
+            type="text" 
+            placeholder="Search Facebook" 
+            className="bg-transparent focus:outline-none text-sm w-full placeholder:text-fb-gray-dark"
+          />
+        </div>
+      </div>
+
+      {/* Middle Section: Navigation Icons */}
+      <nav className="flex items-center h-full flex-grow justify-center max-w-xl">
+        <div className="flex h-full w-full">
+          <div className="flex items-center px-6 border-b-4 border-fb-blue cursor-pointer transition duration-150 ease-in-out flex-1 justify-center">
+            <HomeIcon isActive={true} />
+          </div>
+          <div className="flex items-center px-6 cursor-pointer rounded-lg transition duration-150 ease-in-out flex-1 justify-center hover:bg-fb-gray-light">
+            <HomeIcon isActive={false} /> 
+          </div>
+          <div className="hidden md:flex items-center px-6 cursor-pointer rounded-lg transition duration-150 ease-in-out flex-1 justify-center hover:bg-fb-gray-light">
+            <HomeIcon isActive={false} />
+          </div>
+        </div>
+      </nav>
+
+      {/* Right Section: User & Actions */}
+      <div className="flex items-center space-x-2 md:space-x-4">
+        <div className="hidden md:block w-10 h-10 bg-fb-gray-light rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-300">
+            {/* Menu Icon Placeholder */}
+            <span className="text-xl">💬</span>
+        </div>
+        <div className="w-10 h-10 bg-fb-gray-light rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-300">
+            {/* Notifications Icon Placeholder */}
+            <span className="text-xl">🔔</span>
+        </div>
+        
+        {/* Profile Avatar */}
+        <div className="w-10 h-10 bg-gray-400 rounded-full cursor-pointer overflow-hidden">
+            {/* User Profile Image */}
+            <img src="/vite.svg" alt="Profile" className="w-full h-full object-cover"/>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
