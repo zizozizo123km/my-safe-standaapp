@@ -1,0 +1,296 @@
+**Target File: src/index.css**
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom globals for Facebook feel */
+:root {
+  --fb-blue: #1877f2;
+  --fb-gray-bg: #f0f2f5;
+  --fb-gray-text: #606770;
+  --fb-card-bg: #ffffff;
+}
+
+body {
+  background-color: var(--fb-gray-bg);
+  /* Matching standard Facebook font stacks */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optional custom component styling if needed */
+.button-primary {
+  @apply bg-fb-blue text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600;
+}
+
+---
+**File: package.json**
+{
+  "name": "facebook-clone",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^0.399.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.1"
+  }
+}
+
+---
+**File: tailwind.config.js**
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        'fb-blue': '#1877f2',
+        'fb-gray-bg': '#f0f2f5',
+        'fb-gray-text': '#606770',
+        'fb-green': '#42b72a',
+        'fb-card-bg': '#ffffff',
+      },
+      spacing: {
+        '14': '3.5rem', 
+      }
+    },
+  },
+  plugins: [],
+}
+
+---
+**File: postcss.config.js**
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+
+---
+**File: vite.config.ts**
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+})
+
+---
+**File: index.html**
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook Clone</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
+---
+**File: src/main.tsx**
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+
+---
+**File: src/components/Header.tsx**
+import React from 'react';
+import { Search, Home, Store, Users, Bell, MessageSquare, Menu } from 'lucide-react';
+
+const Header: React.FC = () => {
+  const Icon = ({ IconComponent, isActive = false }: { IconComponent: React.ElementType, isActive?: boolean }) => (
+    <div className={`p-3 mx-1 rounded-lg transition duration-200 cursor-pointer ${
+      isActive 
+        ? 'text-fb-blue border-b-2 border-fb-blue' 
+        : 'text-gray-500 hover:bg-gray-200'
+    } md:w-32 flex justify-center`}>
+      <IconComponent size={24} />
+    </div>
+  );
+
+  const CircleButton = ({ IconComponent }: { IconComponent: React.ElementType }) => (
+    <div className="p-2 bg-gray-200 rounded-full ml-2 cursor-pointer hover:bg-gray-300 transition duration-150">
+      <IconComponent size={20} className="text-black" />
+    </div>
+  );
+
+  // Facebook Logo Icon (SVG taken from a typical Facebook design representation)
+  const FacebookLogo = () => (
+    <svg fill="#1877f2" viewBox="0 0 24 24" width="30" height="30">
+        <path d="M14.5,2h-5C6.467,2,4,4.467,4,7.5v9C4,19.533,6.467,22,9.5,22h5c3.033,0,5.5-2.467,5.5-5.5v-9C20,4.467,17.533,2,14.5,2z M17.5,10h-2.5v-1c0-0.552,0.448-1,1-1h1v-3h-2c-1.657,0-3,1.343-3,3v1h-2v3h2v7h3v-7h2.5L17.5,10z"/>
+    </svg>
+  );
+
+  return (
+    <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+      <div className="max-w-7xl mx-auto flex items-center justify-between h-14 px-4">
+        
+        {/* Left Section: Logo and Search */}
+        <div className="flex items-center">
+          <div className="mr-3">
+            <FacebookLogo />
+          </div>
+          
+          {/* Search Bar */}
+          <div className="relative hidden lg:block">
+            <input 
+              type="text" 
+              placeholder="Search Facebook"
+              className="bg-fb-gray-bg h-10 px-4 pl-10 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-fb-blue w-64"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+          </div>
+        </div>
+
+        {/* Middle Section: Navigation Icons (Desktop/Tablet) */}
+        <nav className="hidden md:flex flex-grow justify-center mx-4 h-full">
+          <Icon IconComponent={Home} isActive={true} />
+          <Icon IconComponent={Users} />
+          <Icon IconComponent={Store} />
+          <Icon IconComponent={Bell} />
+          <Icon IconComponent={Menu} className="lg:hidden" />
+        </nav>
+
+        {/* Right Section: User Actions */}
+        <div className="flex items-center">
+          <CircleButton IconComponent={MessageSquare} />
+          <CircleButton IconComponent={Bell} />
+          {/* Profile Avatar Placeholder */}
+          <img 
+            src="https://via.placeholder.com/32/1877f2/ffffff?text=U" 
+            alt="User Avatar" 
+            className="w-8 h-8 rounded-full ml-3 cursor-pointer object-cover"
+          />
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
+
+---
+**File: src/App.tsx**
+import Header from './components/Header';
+
+function App() {
+  return (
+    <div className="min-h-screen">
+      <Header />
+      <main className="pt-14 max-w-7xl mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-7 gap-4">
+          
+          {/* Left Sidebar (Friends, Watch, Groups) - Col 1-2 for LG, hidden MD */}
+          <div className="hidden lg:block lg:col-span-2 pt-4">
+            <div className="sticky top-16 space-y-2">
+              <div className="flex items-center p-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+                <img src="https://via.placeholder.com/32/1877f2/ffffff?text=U" alt="Profile" className="w-8 h-8 rounded-full mr-3"/>
+                <span className="font-medium">User Profile</span>
+              </div>
+              <div className="flex items-center p-2 hover:bg-gray-200 rounded-lg cursor-pointer text-fb-gray-text">
+                <Home size={24} className="mr-3"/>
+                <span>Feed</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Main Feed Area - Col 4 for MD, Col 3-5 for LG */}
+          <div className="col-span-1 md:col-span-4 lg:col-span-3 pt-4">
+            {/* Create Post Card */}
+            <div className="bg-fb-card-bg p-4 rounded-lg shadow mb-4">
+              <div className="flex items-center border-b pb-3 mb-3">
+                <img src="https://via.placeholder.com/32/1877f2/ffffff?text=U" alt="Profile" className="w-9 h-9 rounded-full mr-3"/>
+                <input 
+                  type="text" 
+                  placeholder="What's on your mind, User?"
+                  className="w-full bg-fb-gray-bg h-10 px-4 rounded-full text-sm focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-between text-fb-gray-text text-sm">
+                <button className="flex items-center p-2 rounded-lg hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4.5-5 2.5 3 5-6V15z" clipRule="evenodd"/></svg>
+                  Live Video
+                </button>
+                <button className="flex items-center p-2 rounded-lg hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4.5-5 2.5 3 5-6V15z" clipRule="evenodd"/></svg>
+                  Photo/Video
+                </button>
+                <button className="hidden sm:flex items-center p-2 rounded-lg hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M7 8a1 1 0 000 2h6a1 1 0 100-2H7z"/></svg>
+                  Feeling/Activity
+                </button>
+              </div>
+            </div>
+            
+            {/* Feed Post Placeholder */}
+            <div className="bg-fb-card-bg p-4 rounded-lg shadow mb-4">
+              <h3 className="font-bold">A Post by Someone</h3>
+              <p className="text-sm text-fb-gray-text mb-2">1 hour ago</p>
+              <p>This is a placeholder for actual content!</p>
+            </div>
+          </div>
+          
+          {/* Right Sidebar (Contacts/Ads) - Col 2 for LG, hidden MD */}
+          <div className="hidden lg:block lg:col-span-2 pt-4">
+            <div className="sticky top-16">
+              <h2 className="font-semibold text-lg text-fb-gray-text p-2">Contacts</h2>
+              <div className="space-y-1">
+                <div className="flex items-center p-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+                  <img src="https://via.placeholder.com/32/00a8a8/ffffff?text=C" alt="Contact" className="w-8 h-8 rounded-full mr-3"/>
+                  <span className="font-medium">Contact Name 1</span>
+                </div>
+                <div className="flex items-center p-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+                  <img src="https://via.placeholder.com/32/a800a8/ffffff?text=C" alt="Contact" className="w-8 h-8 rounded-full mr-3"/>
+                  <span className="font-medium">Contact Name 2</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default App;
